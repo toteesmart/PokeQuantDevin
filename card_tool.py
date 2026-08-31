@@ -745,7 +745,7 @@ def get_last_updated_date() -> str:
     try:
         conn = sqlite3.connect(DB_NAME, timeout=5)
         cursor = conn.cursor()
-        cursor.execute("SELECT date FROM price_history ORDER BY rowid DESC LIMIT 1")
+        cursor.execute("SELECT date FROM price_history ORDER BY date DESC, rowid DESC LIMIT 1")
         res = cursor.fetchone()
         conn.close()
         
