@@ -102,7 +102,7 @@ def run_pipeline():
         Filename=DELTA_OUTPUT,
         Bucket=R2_BUCKET_NAME,
         Key="deltas/latest_delta.json",
-        ExtraArgs={"ContentType": "application/json"}
+        ExtraArgs={"ContentType": "application/json", "CacheControl": "no-cache, no-store, must-revalidate"}
     )
     print("Upload complete! Mobile clients can now pull this update.")
 

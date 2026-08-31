@@ -164,6 +164,14 @@ if "current_match_idx" not in st.session_state:
 if "matched_cards" not in st.session_state:
     st.session_state.matched_cards = []
 
+# --- Autonomous Daily Catalog Hydration ---
+last_delta = _hard_load("pokequant_last_catalog_delta")
+if last_delta != date.today().isoformat():
+    with st.spinner("Hydrating today's price catalog..."):
+        success, msg = apply_daily_catalog_delta()
+        if not success:
+            log_to_sentry(f"Catalog Hydration Error: {msg}")
+
 # Resolve current UI Terminology
 ui_mode = st.session_state.vendor_settings.get("ui_mode", "Vendor (Retail)")
 offer_lbl = "Cash Offer" if ui_mode == "Vendor (Retail)" else "Trade Value"
@@ -188,17 +196,6 @@ if st.sidebar.button("Logout", use_container_width=True):
 st.sidebar.divider()
 st.sidebar.caption("**Local DB Status**")
 st.sidebar.caption(f"Last Price Sync: {get_last_updated_date()}")
-
-if st.sidebar.button("Fetch Daily Price Delta", use_container_width=True):
-    with st.spinner("Downloading and applying price patch..."):
-        success, msg = apply_daily_catalog_delta()
-        if success:
-            st.sidebar.success(msg)
-            time.sleep(1.5)
-            st.rerun()
-        else:
-            st.sidebar.error(msg)
-            log_to_sentry(f"Daily Price Delta Error: {msg}")
 
 st.sidebar.divider()
 st.sidebar.caption("**Cloud Synchronization**")

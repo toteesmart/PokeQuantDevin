@@ -86,7 +86,13 @@ self.addEventListener('fetch', event => {
   // Abort if not GET (prevents caching other API requests)
   if (event.request.method !== 'GET') return;
 
-  // 5. CACHE EVERYTHING ELSE (Including the Stlite Python Engine from CDN)
+  // 5. BYPASS CACHE: Live price deltas must always hit the network
+  if (url.href.includes('latest_delta.json') || url.searchParams.has('t')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // 6. CACHE EVERYTHING ELSE (Including the Stlite Python Engine from CDN)
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       return cachedResponse || fetch(event.request).then(networkResponse => {
