@@ -290,6 +290,7 @@ def turso_execute_sync(statements: List[Dict[str, Any]], override_url: str = Non
     else:
         headers = {
             "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 PokeQuant/1.0",
             "X-Beta-Key": beta_key
         }
         if token:
